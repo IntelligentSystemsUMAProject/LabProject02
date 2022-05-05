@@ -1,6 +1,5 @@
 <div align=center>
-  <h1> LabProject02 </h1>
-  <h2> A* algorithm </h2>
+  <h1> A* algorithm </h1>
 </div>
 
 In this project, you will develop an agent that is able to find its way in a maze 
