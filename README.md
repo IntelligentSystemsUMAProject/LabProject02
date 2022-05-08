@@ -41,15 +41,20 @@ A plain text file named output.txt must be generated which contains the full
 output of the program.
 
 ### Optional task:
+
 Analyze and discuss the mean length of the optimal path, and the number of 
 times that the goal state is not reachable, as you change the fraction of obstacles in the 
 matrix.
 
-### Tentative schedule: 
+### Tentative schedule:
+
 Laboratory session 1: develop the code to generate, manage, and print out a 
 maze.
- Laboratory session 2: develop an implementation of the A* algorithm. 
- Laboratory session 3: present the final result to the class with the help of a slide 
-show and do a practical demonstration of the software (maximum 10 minutes overall). 
+
+Laboratory session 2: develop an implementation of the A* algorithm.
+ 
+Laboratory session 3: present the final result to the class with the help of a slid 
+show and do a practical demonstration of the software (maximum 10 minutes overall).
+
 All the materials (slide show, source code and output.txt file) must be submitted to the 
 associated virtual campus task
