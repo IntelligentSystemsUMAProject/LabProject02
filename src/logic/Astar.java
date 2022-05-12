@@ -1,7 +1,9 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Astar {
 
@@ -33,11 +35,46 @@ public class Astar {
 		return succs;
 	}
 
-	public int getHeuristic(Tuple pos, Tuple exit) {
+	public static int getHeuristic(Tuple pos, Tuple exit) {
 		int xDistance = Math.abs(exit.getX() - pos.getX() );
 		int yDistance = Math.abs(exit.getY() - pos.getY() );
 		
 		return xDistance + yDistance;
 	}
-
+	public Set<Node> algorithm(Node current, Node goal){
+		Set<Node> closedset = new HashSet<Node>();
+		Set<Node> openset = new HashSet<Node>();
+		openset.add(current);
+		openset.add(goal);
+		boolean isFinish = false;
+		while(!openset.isEmpty() && !isFinish) {
+			current = openset.
+			if(current == goal) {
+				isFinish = true;
+			}else {
+				
+				
+				:(
+				
+				
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
+		
+		return closedset;
+	}
+	
+	public int getf(Node node, Tuple goal) {
+		
+		return node.getG() + getHeuristic(node.getPos(), goal);
+	}
+	
 }
