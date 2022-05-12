@@ -5,31 +5,39 @@ import java.util.List;
 
 public class Astar {
 
-	public List<Tuple> getSuccessors(char[][] maze, int row, int column) {
+	public List<Tuple> getSuccessors(char[][] maze, Tuple pos) {
 		List<Tuple> succs = new ArrayList<>();
+		int x = pos.getX();
+		int y = pos.getY();
 
-		if (row != 0) {
-			if (maze[row - 1][column] != '*') {
-				succs.add(new Tuple(row - 1, column));
+		if (x != 0) {
+			if (maze[x - 1][y] != '*') {
+				succs.add(new Tuple(x - 1, y));
 			}
-			if (row != 59) {
-				if (maze[row + 1][column] != '*') {
-					succs.add(new Tuple(row + 1, column));
+			if (x != 59) {
+				if (maze[x + 1][y] != '*') {
+					succs.add(new Tuple(x + 1, y));
 				}
 			}
-			if (column != 0) {
-				if (maze[row][column - 1] != '*') {
-					succs.add(new Tuple(row, column - 1));
+			if (y != 0) {
+				if (maze[x][y - 1] != '*') {
+					succs.add(new Tuple(x, y - 1));
 				}
 			}
-			if (column != 79) {
-				if (maze[row][column + 1] != '*') {
-					succs.add(new Tuple(row, column + 1));
+			if (y != 79) {
+				if (maze[x][y + 1] != '*') {
+					succs.add(new Tuple(x, y + 1));
 				}
 			}
 		}
 		return succs;
 	}
-	
+
+	public int getHeuristic(Tuple pos, Tuple exit) {
+		int xDistance = Math.abs(exit.getX() - pos.getX() );
+		int yDistance = Math.abs(exit.getY() - pos.getY() );
+		
+		return xDistance + yDistance;
+	}
 
 }
