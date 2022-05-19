@@ -34,6 +34,15 @@ public class Astar {
 		}
 		return succs;
 	}
+	
+	public List<Node> getNeighbors(List<Tuple> successorsList , Node current){
+		List<Node> neighborsList = null;
+		for(Tuple succ : successorsList) {
+			neighborsList.add(new Node(current.getG() + 1, succ, current));
+		}
+		
+		return neighborsList;
+	}
 
 	public static int getHeuristic(Tuple pos, Tuple exit) {
 		int xDistance = Math.abs(exit.getX() - pos.getX() );
@@ -41,35 +50,35 @@ public class Astar {
 		
 		return xDistance + yDistance;
 	}
-	public Set<Node> algorithm(Node current, Node goal){
+	public Node algorithm(Node current, Node goal, char[][] maze){
 		Set<Node> closedset = new HashSet<Node>();
 		Set<Node> openset = new HashSet<Node>();
 		openset.add(current);
 		openset.add(goal);
 		boolean isFinish = false;
 		while(!openset.isEmpty() && !isFinish) {
-			current = openset.
+			current = getMinimumF(openset, goal);
 			if(current == goal) {
 				isFinish = true;
 			}else {
-				
-				
-				:(
-				
-				
+				openset.remove(current);
+				closedset.add(current);
+				for(Node neig : getNeighbors(getSuccessors(maze, current.getPos()) , current)) {
+					if(closedset.contains(neig)) {
+					}else {
+						int tentative_g = current.getG() + getHeuristic(current.getPos(), neig.getPos());
+						if (!openset.contains(neig) || tentative_g < neig.getG()) {
+							neig.setG(tentative_g);
+							neig.setParent(current);
+							if (!openset.contains(neig)) {
+								openset.add(neig);
+							}
+						}
+					}
+				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
-		
-		return closedset;
+		return current;
 	}
 	
 	public int getf(Node node, Tuple goal) {
