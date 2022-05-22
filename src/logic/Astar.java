@@ -41,7 +41,6 @@ public class Astar {
 		for (Tuple succ : successorsList) {
 			neighborsList.add(new Node(current.getG() + 1, succ, current));
 		}
-
 		return neighborsList;
 	}
 
@@ -58,28 +57,29 @@ public class Astar {
 		return result;
 	}
 
-	public static Node algorithm(Node current, Tuple goal, char[][] maze) {
-		Set<Node> closedset = new HashSet<Node>();
-		Set<Node> openset = new HashSet<Node>();
-		openset.add(current);
+	public static Node algorithm(Tuple initialState, Tuple goal, char[][] maze) {
+		Set<Node> closedSet = new HashSet<Node>();
+		Set<Node> openSet = new HashSet<Node>();
+		Node current = new Node(0, initialState, null);
+		openSet.add(current);
 		boolean isFinish = false;
-		while (!openset.isEmpty() && !isFinish) {
-			current = getMinimumF(openset, goal);
+		while (!openSet.isEmpty() && !isFinish) {
+			current = getMinimumF(openSet, goal);
 			if (current.getPos().equals(goal)) {
 				isFinish = true;
 			} else {
-				openset.remove(current);
-				closedset.add(current);
+				openSet.remove(current);
+				closedSet.add(current);
 				List<Node> neighborsList = getNeighbors(getSuccessors(maze, current.getPos()), current);
-				for (Node neig : neighborsList) {
-					if (closedset.contains(neig)) {
+				for (Node neighbor : neighborsList) {
+					if (closedSet.contains(neighbor)) {
 					} else {
 						int tentative_g = current.getG() + 1;
-						if (!openset.contains(neig) || tentative_g < neig.getG()) {
-							neig.setG(tentative_g);
-							neig.setParent(current);
-							if (!openset.contains(neig)) {
-								openset.add(neig);
+						if (!openSet.contains(neighbor) || tentative_g < neighbor.getG()) {
+							neighbor.setG(tentative_g);
+							neighbor.setParent(current);
+							if (!openSet.contains(neighbor)) {
+								openSet.add(neighbor);
 							}
 						}
 					}

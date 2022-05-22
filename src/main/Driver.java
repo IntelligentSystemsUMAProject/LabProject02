@@ -26,20 +26,44 @@ public class Driver {
 		}
 
 		// Initialize Maze
-		char[][] maze = new char[nRows][nColumns];
+		char[][] maze = generateMaze(nRows, nColumns, percentageObstacles);
 
-		for (int i = 0; i < nRows; i++) {
-			for (int j = 0; j < nColumns; j++) {
-				maze[i][j] = ' ';
-			}
+		// Calculate Initial and Goal Sates
+		Tuple[] states = getStates(maze, nRows, nColumns);
+		initialState = states[0];
+		goalState = states[1];
+
+		printMaze(nRows, nColumns, output, maze);
+
+		Node result = Astar.algorithm(initialState, goalState, maze);
+		if (goalState.equals(result.getPos())) {
+			System.out.printf("Path found, Cost: %d\n", result.getG());
+			output.printf("Path found, Cost: %d\n", result.getG());
+			char[][] routedMaze = reconstructPath(result, maze);
+			printMaze(nRows, nColumns, output, routedMaze);
+		} else {
+			System.out.println("A* couldn not find a valid path");
+			output.println("A* couldn not find a valid path");
 		}
 
+		output.close();
+	}
+
+	private static char[][] generateMaze(int nRows, int nColumns, double percentageObstacles) {
 		// Calculate Obstacles
 		int nObstacles = (int) (nRows * nColumns * percentageObstacles);
 		int obstacleRow;
 		int obstacleColumn;
 		Random rand = new Random();
-
+		char[][] maze = new char[nRows][nColumns];
+		
+		// Generating empty maze;
+		for (int i = 0; i < nRows; i++) {
+			for (int j = 0; j < nColumns; j++) {
+				maze[i][j] = ' ';
+			}
+		}
+		
 		for (int cnt = 0; cnt < nObstacles;) {
 			obstacleRow = rand.nextInt(nRows);
 			obstacleColumn = rand.nextInt(nColumns);
@@ -49,48 +73,38 @@ public class Driver {
 				cnt++;
 			}
 		}
+		return maze;
+	}
 
-		// Calculate Initial and Goal Sates
+	private static Tuple[] getStates(char[][] maze, int nRows, int nColumns) {
 		boolean initial = false;
 		boolean goal = false;
+		Random rand = new Random();
+		int row;
+		int column;
+		Tuple[] result = new Tuple[2];
 
 		while (!initial || !goal) {
 			if (!initial) {
-				obstacleRow = rand.nextInt(nRows);
-				obstacleColumn = rand.nextInt(nColumns);
-				if (maze[obstacleRow][obstacleColumn] == ' ') {
-					maze[obstacleRow][obstacleColumn] = 'I';
-					initialState = new Tuple(obstacleRow, obstacleColumn);
+				row = rand.nextInt(nRows);
+				column = rand.nextInt(nColumns);
+				if (maze[row][column] == ' ') {
+					maze[row][column] = 'I';
+					result[0] = new Tuple(row, column);
 					initial = true;
 				}
 			}
 			if (!goal) {
-				obstacleRow = rand.nextInt(nRows);
-				obstacleColumn = rand.nextInt(nColumns);
-				if (maze[obstacleRow][obstacleColumn] == ' ') {
-					maze[obstacleRow][obstacleColumn] = 'G';
-					goalState = new Tuple(obstacleRow, obstacleColumn);
+				row = rand.nextInt(nRows);
+				column = rand.nextInt(nColumns);
+				if (maze[row][column] == ' ') {
+					maze[row][column] = 'G';
+					result[1] = new Tuple(row, column);
 					goal = true;
 				}
 			}
 		}
-
-		printMaze(nRows, nColumns, output, maze);
-
-		Node initialNode = new Node(0, initialState, null);
-
-		Node result = Astar.algorithm(initialNode, goalState, maze);
-		if (goalState.equals(result.getPos())) {
-			System.out.println("Path found");
-			output.println("Path found");
-			char[][] routedMaze = reconstructPath(result, maze);
-			printMaze(nRows, nColumns, output, routedMaze);
-		} else {
-			System.out.println("A* couldn not find a valid path");
-			output.println("A* couldn not find a valid path");
-		}
-
-		output.close();
+		return result;
 	}
 
 	private static void printMaze(int nRows, int nColumns, PrintWriter output, char[][] maze) {
