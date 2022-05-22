@@ -16,43 +16,45 @@ public class Astar {
 			if (maze[x - 1][y] != '*') {
 				succs.add(new Tuple(x - 1, y));
 			}
-			if (x != 59) {
-				if (maze[x + 1][y] != '*') {
-					succs.add(new Tuple(x + 1, y));
-				}
-			}
-			if (y != 0) {
-				if (maze[x][y - 1] != '*') {
-					succs.add(new Tuple(x, y - 1));
-				}
-			}
-			if (y != 79) {
-				if (maze[x][y + 1] != '*') {
-					succs.add(new Tuple(x, y + 1));
-				}
+		}
+		if (x != 59) {
+			if (maze[x + 1][y] != '*') {
+				succs.add(new Tuple(x + 1, y));
 			}
 		}
+		if (y != 0) {
+			if (maze[x][y - 1] != '*') {
+				succs.add(new Tuple(x, y - 1));
+			}
+		}
+		if (y != 79) {
+			if (maze[x][y + 1] != '*') {
+				succs.add(new Tuple(x, y + 1));
+			}
+		}
+
 		return succs;
 	}
-	
-	public static List<Node> getNeighbors(List<Tuple> successorsList , Node current){
+
+	public static List<Node> getNeighbors(List<Tuple> successorsList, Node current) {
 		List<Node> neighborsList = new ArrayList<>();
-		for(Tuple succ : successorsList) {
+		for (Tuple succ : successorsList) {
 			neighborsList.add(new Node(current.getG() + 1, succ, current));
 		}
-		
+
 		return neighborsList;
 	}
 
 	public static Node getMinimumF(Set<Node> openSet, Tuple goal) {
 		Node result = null;
-		int current = Integer.MAX_VALUE;
-
+		int minimumCost = Integer.MAX_VALUE;
 		for (Node node : openSet) {
-			if (current > node.getf(goal))
+			int estimatedCost = node.getf(goal);
+			if (minimumCost > estimatedCost) {
+				minimumCost = estimatedCost;
 				result = node;
+			}
 		}
-
 		return result;
 	}
 
@@ -68,7 +70,8 @@ public class Astar {
 			} else {
 				openset.remove(current);
 				closedset.add(current);
-				for (Node neig : getNeighbors(getSuccessors(maze, current.getPos()), current)) {
+				List<Node> neighborsList = getNeighbors(getSuccessors(maze, current.getPos()), current);
+				for (Node neig : neighborsList) {
 					if (closedset.contains(neig)) {
 					} else {
 						int tentative_g = current.getG() + 1;

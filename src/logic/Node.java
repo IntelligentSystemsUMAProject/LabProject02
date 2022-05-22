@@ -66,4 +66,9 @@ public class Node {
 		return Objects.equals(pos, other.pos);
 	}
 	
+	@Override
+	public String toString() {
+		return "Node{ g: " + this.g + " pos: " + pos.toString() + "}";
+	}
+	
 }
