@@ -6,8 +6,50 @@ import java.util.List;
 import java.util.Set;
 
 public class Astar {
+	
+	private Node answer;
+	private Tuple initialState;
+	private Tuple finalState;
+	private char[][] maze;
+	
+	public Astar(Tuple initialState, Tuple finalState, char[][] maze) {
+		this.initialState = initialState;
+		this.finalState = finalState;
+		this.maze = maze;
+		this.answer = algorithm(initialState, finalState, maze);
+	}
+	
+	
 
-	public static List<Tuple> getSuccessors(char[][] maze, Tuple pos) {
+	public Node getAnswer() {
+		return answer;
+	}
+
+	public Tuple getInitialState() {
+		return initialState;
+	}
+
+	public Tuple getFinalState() {
+		return finalState;
+	}
+
+	public char[][] getMaze() {
+		return maze;
+	}
+	
+	public char[][] reconstructPath() {
+		char[][] routedMaze = this.maze;
+		answer = answer.getParent();
+		while (answer.getParent() != null) {
+			int x = answer.getPos().getX();
+			int y = answer.getPos().getY();
+			routedMaze[x][y] = '#';
+			answer = answer.getParent();
+		}
+		return routedMaze;
+	}
+
+	private List<Tuple> getSuccessors(char[][] maze, Tuple pos) {
 		List<Tuple> succs = new ArrayList<>();
 		int x = pos.getX();
 		int y = pos.getY();
@@ -36,7 +78,7 @@ public class Astar {
 		return succs;
 	}
 
-	public static List<Node> getNeighbors(List<Tuple> successorsList, Node current) {
+	private List<Node> getNeighbors(List<Tuple> successorsList, Node current) {
 		List<Node> neighborsList = new ArrayList<>();
 		for (Tuple succ : successorsList) {
 			neighborsList.add(new Node(current.getG() + 1, succ, current));
@@ -44,7 +86,7 @@ public class Astar {
 		return neighborsList;
 	}
 
-	public static Node getMinimumF(Set<Node> openSet, Tuple goal) {
+	private Node getMinimumF(Set<Node> openSet, Tuple goal) {
 		Node result = null;
 		int minimumCost = Integer.MAX_VALUE;
 		for (Node node : openSet) {
@@ -57,7 +99,7 @@ public class Astar {
 		return result;
 	}
 
-	public static Node algorithm(Tuple initialState, Tuple goal, char[][] maze) {
+	private Node algorithm(Tuple initialState, Tuple goal, char[][] maze) {
 		Set<Node> closedSet = new HashSet<Node>();
 		Set<Node> openSet = new HashSet<Node>();
 		Node current = new Node(0, initialState, null);
