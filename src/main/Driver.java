@@ -11,7 +11,7 @@ import logic.Tuple;
 
 public class Driver {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		final int nRows = 60;
 		final int nColumns = 80;
 		double percentageObstacles = 0.30;
@@ -37,14 +37,57 @@ public class Driver {
 		
 		Node result = astar.getAnswer();
 		if (goalState.equals(result.getPos())) {
-			System.out.printf("Path found, Cost: %d\n", result.getG());
-			output.printf("Path found, Cost: %d\n", result.getG());
 			char[][] routedMaze = astar.reconstructPath();
 			m.printMaze(output, routedMaze);
+			System.out.printf("Path found, Cost: %d\n", result.getG());
+			output.printf("Path found, Cost: %d\n", result.getG());
 		} else {
 			System.out.println("A* couldn not find a valid path");
 			output.println("A* couldn not find a valid path");
 		}
+		
+		
+		// Statistics;
+		double[] stepsNeeded = new double[40]; // [obstacle level][iteration]
+		double[] exitFound = new double[40];
+		int numIterations = 100;
+		int cnt = 0;
+		percentageObstacles = 0.11;
+		while(percentageObstacles <= 0.50) {
+			stepsNeeded[cnt] = 0;
+			exitFound[cnt] = 0;
+			for(int i = 0; i<numIterations; i++) {
+				Maze mm = new Maze(nRows, nColumns, percentageObstacles);
+				Astar testAlgo = new Astar(mm.getInitialState(), mm.getGoalState(), mm.getMaze());
+				stepsNeeded[cnt] += testAlgo.getAnswer().getG();
+				if (mm.getGoalState().equals(testAlgo.getAnswer().getPos())) {
+					exitFound[cnt] += 1;
+				} else {
+					exitFound[cnt] += 0;
+				}
+			}
+			stepsNeeded[cnt] = stepsNeeded[cnt]/numIterations;
+			exitFound[cnt] = exitFound[cnt];
+			percentageObstacles += 0.01;
+			cnt++;
+		}
+		
+		// printStatistics
+		System.out.printf("%% of obstacles\tSteps needed\tSuccess Rate\n");
+		output.printf("%% of obstacles\tSteps needed\tSuccess Rate\n");
+		PrintWriter stat = new PrintWriter(new File("stats.csv"));
+		stat.printf("sep=,\n");
+		stat.printf("%% of obstacles\tSteps needed\tSuccess Rate\n");
+		percentageObstacles = 0.11;
+		for(int i = 0; i< stepsNeeded.length; i++) {
+			System.out.printf	("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			output.printf		("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			stat.printf			("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			percentageObstacles += 0.01;
+		}
+		stat.close();
 		output.close();
 	}
+	
+	
 }

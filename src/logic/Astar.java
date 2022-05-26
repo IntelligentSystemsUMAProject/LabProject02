@@ -43,7 +43,7 @@ public class Astar {
 		while (answer.getParent() != null) {
 			int x = answer.getPos().getX();
 			int y = answer.getPos().getY();
-			routedMaze[x][y] = '#';
+			routedMaze[x][y] = '+';
 			answer = answer.getParent();
 		}
 		return routedMaze;
