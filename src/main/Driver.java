@@ -49,7 +49,7 @@ public class Driver {
 		
 		// Statistics;
 		double[] stepsNeeded = new double[40]; // [obstacle level][iteration]
-		double[] exitFound = new double[40];
+		int[] exitFound = new int[40];
 		int numIterations = 100;
 		int cnt = 0;
 		percentageObstacles = 0.11;
@@ -77,12 +77,12 @@ public class Driver {
 		output.printf("%% of obstacles\tSteps needed\tSuccess Rate\n");
 		PrintWriter stat = new PrintWriter(new File("stats.csv"));
 		stat.printf("sep=,\n");
-		stat.printf("%% of obstacles\tSteps needed\tSuccess Rate\n");
+		stat.printf("%% of obstacles,Steps needed,Success Rate\n");
 		percentageObstacles = 0.11;
 		for(int i = 0; i< stepsNeeded.length; i++) {
-			System.out.printf	("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
-			output.printf		("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
-			stat.printf			("%.2f\t\t%f\t%f\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			System.out.printf	("%.2f\t\t%.2f\t\t%d\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			output.printf		("%.2f\t\t%.2f\t\t%d\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
+			stat.printf			("%.2f,%.2f,%d\n",percentageObstacles, stepsNeeded[i],exitFound[i]);
 			percentageObstacles += 0.01;
 		}
 		stat.close();
